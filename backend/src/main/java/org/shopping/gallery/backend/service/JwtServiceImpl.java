@@ -20,7 +20,7 @@ public class JwtServiceImpl implements JwtService{
     public String getToken(String key, Object value) {
 
         Date expTime = new Date();
-        expTime.setTime(expTime.getTime() + 1000 * 60 * 5);
+        expTime.setTime(expTime.getTime() + 1000 * 60 * 30);
 
         secretKey = secretKey.replaceAll("[^A-Za-z0-9+/=]", "");
 

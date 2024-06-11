@@ -10,8 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
-import javax.smartcardio.Card;
 import java.util.List;
 
 @CrossOrigin
@@ -29,7 +27,8 @@ public class CartController {
 
     @GetMapping("/api/cart/items")
     public ResponseEntity getCartItems(@CookieValue(value = "token", required = false) String token) {
-        if(!jwtService.isValid(token)) {
+
+        if (!jwtService.isValid(token)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
 
@@ -38,9 +37,8 @@ public class CartController {
         List<Integer> itemIds = carts.stream().map(Cart::getItemId).toList();
         List<Item> items = itemRepository.findByIdIn(itemIds);
 
-        return new ResponseEntity<>(carts, HttpStatus.OK);
+        return new ResponseEntity<>(items, HttpStatus.OK);
     }
-
 
     @PostMapping("/api/cart/items/{itemId}")
     public ResponseEntity pushCartItem(
@@ -48,14 +46,14 @@ public class CartController {
             @CookieValue(value = "token", required = false) String token
     ) {
 
-        if(!jwtService.isValid(token)) {
+        if (!jwtService.isValid(token)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
 
         int memberId = jwtService.getId(token);
         Cart cart = cartRepository.findByMemberIdAndItemId(memberId, itemId);
 
-        if(cart == null){
+        if (cart == null) {
             Cart newCart = new Cart();
             newCart.setMemberId(memberId);
             newCart.setItemId(itemId);
@@ -63,7 +61,23 @@ public class CartController {
         }
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
 
+    @DeleteMapping("/api/cart/items/{itemId}")
+    public ResponseEntity removeCartItem(
+            @PathVariable("itemId") int itemId,
+            @CookieValue(value = "token", required = false) String token
+    ) {
+        if (!jwtService.isValid(token)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+
+        int memberId = jwtService.getId(token);
+        Cart cart = cartRepository.findByMemberIdAndItemId(memberId, itemId);
+
+        cartRepository.delete(cart);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
