@@ -1,17 +1,20 @@
 <template>
   <div class="form-signin w-100 m-auto">
       <div class="form-floating">
-        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" v-model="state.form.email">
+        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com"
+               @keyup.enter="submit()"
+               v-model="state.form.email">
         <label for="floatingInput">Email address</label>
       </div>
       <div class="form-floating">
-        <input type="password" class="form-control" id="floatingPassword" placeholder="Password" v-model="state.form.password">
+        <input type="password" class="form-control" id="floatingPassword" placeholder="Password" @keyup.enter="submit()"
+               v-model="state.form.password">
         <label for="floatingPassword">Password</label>
       </div>
 
       <div class="form-check text-start my-3">
-        <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">
-        <label class="form-check-label" for="flexCheckDefault">
+        <label>
+        <input  type="checkbox" value="remember-me" @keyup.enter="submit()">
           Remember me
         </label>
       </div>
@@ -24,6 +27,7 @@
 import {reactive} from "vue";
 import axios from "axios";
 import store from "@/scripts/store";
+import router from "@/scripts/router";
 
 export default {
   setup(){
@@ -34,11 +38,16 @@ export default {
         }
     })
 
-    const submit = () =>{
-      axios.post("api/account/login", state.form).then((res) => {
+    const submit = () => {
+      axios.post("/api/account/login", state.form).then((res) => {
         store.commit('setAccount', res.data);
+        console.log(res.data);
+        sessionStorage.setItem("id", res.data);
+        router.push({path: "/"});
         window.alert("로그인하였습니다.");
-      })
+      }).catch(() => {
+        window.alert("로그인 정보가 존재하지 않습니다..");
+      });
     }
 
     return {state, submit}
