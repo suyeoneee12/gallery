@@ -27,7 +27,6 @@ public class AccountController {
     @Autowired
     JwtService jwtService;
 
-
     @PostMapping("/api/account/login")
     public ResponseEntity login(@RequestBody Map<String, String> params,
                                 HttpServletResponse res) {
