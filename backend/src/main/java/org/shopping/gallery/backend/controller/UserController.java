@@ -26,7 +26,7 @@ public class UserController {
         String username = userDto.getUsername();
         String password = userDto.getPassword();
 
-        try {npm
+        try {
             // email이 이미 존재하는지 확인
             if(userService.isEmailExists(email)) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 존재하는 이메일입니다.");

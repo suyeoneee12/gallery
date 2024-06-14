@@ -1,6 +1,5 @@
 package org.shopping.gallery.backend.entity;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import jakarta.persistence.*;
 import lombok.Getter;
 
