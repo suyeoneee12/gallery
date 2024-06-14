@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+
 @CrossOrigin
 @RestController
 @RequiredArgsConstructor
@@ -25,15 +26,15 @@ public class UserController {
         String username = userDto.getUsername();
         String password = userDto.getPassword();
 
-        try {
+        try {npm
             // email이 이미 존재하는지 확인
             if(userService.isEmailExists(email)) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 존재하는 이메일입니다.");
             }
 
-            User registeredUser = userService.registerUser(email, username, password);
+            User registeredUser = userService.registerUser(email, password);
 
-            if(registeredUser != null) {
+            if(registeredUser != null && !userService.isEmailExists(email)) {
                 return ResponseEntity.ok("회원가입 성공!");
             }else {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("만료된 키입니다.");

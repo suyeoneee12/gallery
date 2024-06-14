@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name="user")
+@Table(name="members")
 public class User {
 
     @Id // primary key
@@ -15,8 +15,8 @@ public class User {
     @Column(length=50, nullable=false, unique=true)
     private String email;
 
-    @Column(length=50, nullable=false, unique=true)
-    private String username;
+    //@Column(length=50, nullable=false, unique=true)
+    //private String username;
 
     @Column(length = 50, nullable = false)
     private String password;
