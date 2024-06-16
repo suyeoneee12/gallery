@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.net.URI;
 import java.util.Map;
 
 @CrossOrigin
@@ -48,6 +49,14 @@ public class AccountController {
 
         throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
+
+    //네이버 로그인
+/*    @PostMapping("/social-login")
+    public ResponseEntity<LoginResponse> doSocialLogin(@RequestBody @Valid SocialLoginRequest request) {
+
+        return ResponseEntity.created(URI.create("/social-login"))
+                .body(userService.doSocialLogin(request));
+    }*/
 
     @PostMapping("/api/account/logout")
     public ResponseEntity login(HttpServletResponse res) {

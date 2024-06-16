@@ -28,20 +28,21 @@ public class UserController {
 
         try {
             // email이 이미 존재하는지 확인
-            if(userService.isEmailExists(email)) {
+            if (userService.isEmailExists(email)) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 존재하는 이메일입니다.");
             }
 
             User registeredUser = userService.registerUser(email, password);
 
-            if(registeredUser != null && !userService.isEmailExists(email)) {
+            if (registeredUser != null) {
                 return ResponseEntity.ok("회원가입 성공!");
-            }else {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("만료된 키입니다.");
+            } else {
+                // 유저 등록에 실패한 경우
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원가입에 실패했습니다.");
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버오류");
         }
-
     }
+
 }
