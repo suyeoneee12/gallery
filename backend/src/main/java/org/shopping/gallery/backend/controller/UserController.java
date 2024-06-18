@@ -23,7 +23,6 @@ public class UserController {
     @PostMapping("/api/register")
     public ResponseEntity<String> saveUser(@RequestBody UserDto userDto) {
         String email = userDto.getEmail();
-        String username = userDto.getUsername();
         String password = userDto.getPassword();
 
         try {
