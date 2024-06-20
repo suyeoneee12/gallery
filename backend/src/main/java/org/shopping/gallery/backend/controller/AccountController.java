@@ -3,17 +3,23 @@ package org.shopping.gallery.backend.controller;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import org.shopping.gallery.backend.entity.Item;
 import org.shopping.gallery.backend.entity.Member;
+import org.shopping.gallery.backend.repository.ItemRepository;
 import org.shopping.gallery.backend.repository.MemberRepository;
 import org.shopping.gallery.backend.service.JwtService;
+import org.shopping.gallery.backend.service.JwtServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+
+import java.util.List;
 import java.util.Map;
 
-@CrossOrigin
+@CrossOrigin(origins = {"http://localhost:3001", "http://localhost:8080"}, allowCredentials = "true")
 @RestController
 public class AccountController {
 
@@ -29,7 +35,6 @@ public class AccountController {
         Member member = memberRepository.findByEmailAndPassword(params.get("email"), params.get("password"));
 
         if (member != null) {
-            //JwtService jwtService = new JwtServiceImpl();
             int id = member.getId();
             String token = jwtService.getToken("id", id);
 
@@ -45,9 +50,8 @@ public class AccountController {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
-
     @PostMapping("/api/account/logout")
-    public ResponseEntity login(HttpServletResponse res) {
+    public ResponseEntity logout(HttpServletResponse res) {
         Cookie cookie = new Cookie("token", null);
         cookie.setPath("/");
         cookie.setMaxAge(0);
@@ -55,7 +59,6 @@ public class AccountController {
         res.addCookie(cookie);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 
     @GetMapping("/api/account/check")
     public ResponseEntity check(@CookieValue(value = "token", required = false) String token) {
@@ -68,5 +71,4 @@ public class AccountController {
 
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
-
 }

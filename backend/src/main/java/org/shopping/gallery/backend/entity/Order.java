@@ -7,11 +7,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name="orders")
+@Table(name = "orders")
 public class Order {
 
-    @Id // primary key
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //자동 증가
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column
@@ -31,5 +31,4 @@ public class Order {
 
     @Column(length = 500, nullable = false)
     private String items;
-
 }

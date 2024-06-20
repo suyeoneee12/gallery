@@ -4,14 +4,15 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+
 @Getter
 @Setter
 @Entity
-@Table(name="carts")
+@Table(name = "carts")
 public class Cart {
 
-    @Id // primary key
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //자동증가
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column

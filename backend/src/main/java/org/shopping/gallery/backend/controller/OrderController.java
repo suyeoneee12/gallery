@@ -1,9 +1,13 @@
 package org.shopping.gallery.backend.controller;
 
 import jakarta.transaction.Transactional;
-import org.shopping.gallery.backend.entity.Order;
+import lombok.Getter;
 import org.shopping.gallery.backend.dto.OrderDto;
+import org.shopping.gallery.backend.entity.Cart;
+import org.shopping.gallery.backend.entity.Item;
+import org.shopping.gallery.backend.entity.Order;
 import org.shopping.gallery.backend.repository.CartRepository;
+import org.shopping.gallery.backend.repository.ItemRepository;
 import org.shopping.gallery.backend.repository.OrderRepository;
 import org.shopping.gallery.backend.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,15 +15,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.util.List;
 
-@CrossOrigin
+@CrossOrigin(origins = {"http://localhost:3001", "http://localhost:8080"}, allowCredentials = "true")
 @RestController
 public class OrderController {
-
-    @Autowired
-    JwtService jwtService;
 
     @Autowired
     OrderRepository orderRepository;
@@ -27,8 +27,14 @@ public class OrderController {
     @Autowired
     CartRepository cartRepository;
 
+    @Autowired
+    JwtService jwtService;
+
     @GetMapping("/api/orders")
-    public ResponseEntity getOrder(@CookieValue(value = "token", required = false) String token) {
+    public ResponseEntity getOrder(
+            @CookieValue(value = "token", required = false) String token
+    ) {
+
         if (!jwtService.isValid(token)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
@@ -52,7 +58,7 @@ public class OrderController {
         int memberId = jwtService.getId(token);
         Order newOrder = new Order();
 
-        newOrder.setMemberId(jwtService.getId(token));
+        newOrder.setMemberId(memberId);
         newOrder.setName(dto.getName());
         newOrder.setAddress(dto.getAddress());
         newOrder.setPayment(dto.getPayment());
@@ -60,9 +66,8 @@ public class OrderController {
         newOrder.setItems(dto.getItems());
 
         orderRepository.save(newOrder);
-        cartRepository.deleteByMemberId(memberId); // 특정 사용자의 장바구니 비우기
+        cartRepository.deleteByMemberId(memberId);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 }

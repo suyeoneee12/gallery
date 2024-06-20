@@ -4,20 +4,22 @@ import org.shopping.gallery.backend.entity.Cart;
 import org.shopping.gallery.backend.entity.Item;
 import org.shopping.gallery.backend.repository.CartRepository;
 import org.shopping.gallery.backend.repository.ItemRepository;
-import org.shopping.gallery.backend.service.JwtServiceImpl;
+import org.shopping.gallery.backend.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.net.http.HttpResponse;
 import java.util.List;
 
-@CrossOrigin
+@CrossOrigin(origins = {"http://localhost:3001", "http://localhost:8080"}, allowCredentials = "true")
 @RestController
 public class CartController {
 
     @Autowired
-    JwtServiceImpl jwtService;
+    JwtService jwtService;
 
     @Autowired
     CartRepository cartRepository;
@@ -68,6 +70,7 @@ public class CartController {
             @PathVariable("itemId") int itemId,
             @CookieValue(value = "token", required = false) String token
     ) {
+
         if (!jwtService.isValid(token)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
@@ -76,8 +79,6 @@ public class CartController {
         Cart cart = cartRepository.findByMemberIdAndItemId(memberId, itemId);
 
         cartRepository.delete(cart);
-
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 }
