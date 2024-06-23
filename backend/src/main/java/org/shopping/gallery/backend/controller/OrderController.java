@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
-@CrossOrigin(origins = {"http://localhost:3001", "http://localhost:8080"}, allowCredentials = "true")
+@CrossOrigin
 @RestController
 public class OrderController {
 
